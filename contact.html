@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>צרו קשר לקבלת הצעת מחיר ללא התחייבות — עבודות בטון ועוד</title>
+    <meta name="description" content="מעוניינים בעבודות בטון איכותיות? צרו קשר עכשיו לייעוץ מקצועי והצעת מחיר מיידית. זמינים עבורכם בכל שעה. שירות אמין ומהיר!">
+    <meta name="keywords" content="צור קשר, הצעת מחיר עבודות בטון, קבלן בטון, עבודות בטון מחירים, ייעוץ בטון">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '825b33c2-890c-4c70-9c92-3add64f00d0b',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="צרו קשר לקבלת הצעת מחיר ללא התחייבות — עבודות בטון ועוד">
+  <meta property="og:description" content="מעוניינים בעבודות בטון איכותיות? צרו קשר עכשיו לייעוץ מקצועי והצעת מחיר מיידית. זמינים עבורכם בכל שעה. שירות אמין ומהיר!">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="צרו קשר לקבלת הצעת מחיר ללא התחייבות — עבודות בטון ועוד">
+  <meta name="twitter:description" content="מעוניינים בעבודות בטון איכותיות? צרו קשר עכשיו לייעוץ מקצועי והצעת מחיר מיידית. זמינים עבורכם בכל שעה. שירות אמין ומהיר!">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: #333 !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))), .sub-menu:not(:has(li)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .sub-menu.mobile-expanded { max-height: 500px !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-dark) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-dark) !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-dark) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      #mic-access-tool-general-button, .mic-access-tool-general-button,
+      #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+      ._access-icon, #mic-access-tool-box, .mic-access-tool-box,
+      #mic-init-access-tool #mic-access-tool-box, div[id*="mic-access-tool-box"], ._access-menu {
+        display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important;
+      }
+    </style>
+</head>
+<body>
+
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewbox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewbox="0 0 24 24" fill="none" style="display:none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+  
+  <button class="phone-header-btn" aria-label="Call">
+    <svg width="20" height="20" viewbox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+  
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="/" class="logo-link">
+        <img src="/assets/business-logo.webp" alt="עבודות בטון ועוד" class="logo">
+      </a>
+    </div>
+    
+    <ul class="nav-menu" id="navMenu"><li><a href="/services">שירותים</a></li><li><a href="/projects">פרויקטים</a></li></ul>
+    
+    <div class="nav-cta-container">
+      <a href="/contact" class="nav-cta-btn">צור קשר</a>
+    </div>
+  </div>
+</nav>
+  
+  <main>
+    <section class="contact-contact-intro-section" data-layout-spec="צור קשר-contact-intro">
+  <div class="contact-intro-container">
+    <div class="contact-intro-grid">
+      <div class="contact-intro-content">
+        <h1>צור קשר וקבל הצעת מחיר</h1>
+        <p>ספר לנו מה אתה רוצה לבנות או לתקן, איפה זה נמצא, ומה לוח הזמנים המועדף עליך. תמונות ומידות משוערות עוזרות לנו להגיב מהר יותר ולתת לך הצעת מחיר מדויקת.</p>
+      </div>
+      <div class="contact-intro-image-wrapper">
+        <div class="contact-intro-image-frame">
+          <img data-placeholder="contact-contact-intro-image-1" data-context="Close-up photo of concrete formwork tools and equipment on a construction site - wooden forms, metal clamps, spirit level, measuring tape arranged neatly on clean surface, warm natural lighting, professional construction photography for Israeli concrete and renovation business" width="600" height="400" src="/assets/site-contact-contact-intro-image-1.webp" alt="כלי עבודה ותבניות בטון">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="contact-intro-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 60" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="contact-intro-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:rgba(185,175,163,0.15);stop-opacity:1"></stop>
+          <stop offset="50%" style="stop-color:rgba(185,175,163,0.45);stop-opacity:1"></stop>
+          <stop offset="100%" style="stop-color:rgba(185,175,163,0.15);stop-opacity:1"></stop>
+        </linearGradient>
+      </defs>
+      <path d="M0,60 L0,30 L1200,30 L1200,60 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="contact-contact-details-section" data-layout-spec="צור קשר-contact-details">
+  <div class="contact-contact-details-container">
+    <div class="contact-contact-details-header">
+      <h2>דרכים ליצור קשר</h2>
+      <p>בחרו את הדרך הנוחה לכם. אנחנו מגיבים מהר ככל האפשר ושומרים על תקשורת ברורה.</p>
+    </div>
+
+    <div class="contact-contact-details-grid">
+      <div class="contact-contact-details-card">
+        <h3>טלפון</h3>
+        <p>צרו קשר ישירות לשיחה או הודעת וואטסאפ. זמינים בשעות העבודה ומגיבים במהירות.</p>
+        <p class="contact-contact-details-value">[business_phone]</p>
+      </div>
+
+      <div class="contact-contact-details-card">
+        <h3>דוא״ל</h3>
+        <p>שלחו לנו פרטים על הפרויקט שלכם ונחזור אליכם עם הצעת מחיר מפורטת.</p>
+        <p class="contact-contact-details-value">[business_email]</p>
+      </div>
+
+      <div class="contact-contact-details-card">
+        <h3>זמן תגובה</h3>
+        <p>בדרך כלל עונים תוך 24 שעות בימי עבודה. בפניות דחופות מומלץ להתקשר.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-contact-details-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 60" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,60 L0,35 L80,35 L80,25 L160,25 L160,35 L240,35 L240,20 L320,20 L320,35 L400,35 L400,30 L480,30 L480,35 L560,35 L560,25 L640,25 L640,35 L720,35 L720,20 L800,20 L800,35 L880,35 L880,30 L960,30 L960,35 L1040,35 L1040,25 L1120,25 L1120,35 L1200,35 L1200,60 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="contact-contact-form-section" data-layout-spec="צור קשר-contact-form">
+  <div class="contact-form-container">
+    <div class="contact-form-content">
+      <div class="contact-form-header">
+        <h2>שלחו לנו הודעה</h2>
+        <p>כתבו את המיקום, גודל משוער ואת סוג הגימור שאתם רוצים. אם יש לכם מועד יעד, ציינו אותו.</p>
+      </div>
+      
+      <form class="contact-form" action="/submit-contact" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-name">שם מלא</label>
+            <input type="text" id="contact-name" name="name" required="">
+          </div>
+          <div class="form-group">
+            <label for="contact-email">דוא"ל</label>
+            <input type="email" id="contact-email" name="email" required="">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="contact-phone">טלפון</label>
+          <input type="tel" id="contact-phone" name="phone" required="">
+        </div>
+        
+        <div class="form-group">
+          <label for="contact-message">הודעה</label>
+          <textarea id="contact-message" name="message" rows="6" required=""></textarea>
+        </div>
+        
+        <button type="submit" class="btn-submit">שלח</button>
+      </form>
+    </div>
+    
+    <div class="form-backplate" aria-hidden="true"></div>
+  </div>
+  
+  <div class="contact-form-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 70" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,70 L0,35 Q100,42 200,38 T400,35 Q500,40 600,36 T800,38 Q900,35 1000,40 T1200,36 L1200,70 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="contact-service-area-section" data-layout-spec="צור קשר-service-area">
+  <div class="contact-service-area-container">
+    <div class="contact-service-area-content">
+      <h2>אזורי שירות</h2>
+      <p>אנחנו פועלים באזור המרכז והסביבה הקרובה, ומתאמים נסיעות לפי היקף הפרויקט. לעבודות גדולות יותר, אנחנו מגיעים גם למרחקים רחוקים יותר.</p>
+      <p>ביציקות גדולות, ביקור מדידה באתר עוזר לאשר גבהים, נגישות וקצוות – כך אנחנו מבטיחים תוצאה מושלמת ללא הפתעות.</p>
+    </div>
+    <div class="contact-service-area-map-panel">
+      <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" class="contact-service-area-map-svg">
+        <!-- Grid lines -->
+        <line x1="0" y1="100" x2="400" y2="100" stroke="var(--border-light)" stroke-width="1" opacity="0.4"></line>
+        <line x1="0" y1="200" x2="400" y2="200" stroke="var(--border-light)" stroke-width="1" opacity="0.4"></line>
+        <line x1="0" y1="300" x2="400" y2="300" stroke="var(--border-light)" stroke-width="1" opacity="0.4"></line>
+        <line x1="100" y1="0" x2="100" y2="400" stroke="var(--border-light)" stroke-width="1" opacity="0.4"></line>
+        <line x1="200" y1="0" x2="200" y2="400" stroke="var(--border-light)" stroke-width="1" opacity="0.4"></line>
+        <line x1="300" y1="0" x2="300" y2="400" stroke="var(--border-light)" stroke-width="1" opacity="0.4"></line>
+        
+        <!-- Dots at intersections -->
+        <circle cx="100" cy="100" r="3" fill="var(--text-muted)" opacity="0.5"></circle>
+        <circle cx="200" cy="100" r="3" fill="var(--text-muted)" opacity="0.5"></circle>
+        <circle cx="300" cy="100" r="3" fill="var(--text-muted)" opacity="0.5"></circle>
+        <circle cx="100" cy="200" r="3" fill="var(--text-muted)" opacity="0.5"></circle>
+        <circle cx="200" cy="200" r="3" fill="var(--text-muted)" opacity="0.5"></circle>
+        <circle cx="300" cy="200" r="3" fill="var(--text-muted)" opacity="0.5"></circle>
+        <circle cx="100" cy="300" r="3" fill="var(--text-muted)" opacity="0.5"></circle>
+        <circle cx="200" cy="300" r="3" fill="var(--text-muted)" opacity="0.5"></circle>
+        <circle cx="300" cy="300" r="3" fill="var(--text-muted)" opacity="0.5"></circle>
+        
+        <!-- Central marker (service center) -->
+        <circle cx="200" cy="200" r="8" fill="var(--accent)" opacity="0.85"></circle>
+        <circle cx="200" cy="200" r="16" fill="none" stroke="var(--accent)" stroke-width="2" opacity="0.5"></circle>
+        <circle cx="200" cy="200" r="28" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.3"></circle>
+        
+        <!-- Decorative area markers -->
+        <circle cx="130" cy="150" r="5" fill="var(--primary)" opacity="0.6"></circle>
+        <circle cx="270" cy="180" r="5" fill="var(--primary)" opacity="0.6"></circle>
+        <circle cx="160" cy="260" r="5" fill="var(--primary)" opacity="0.6"></circle>
+        <circle cx="240" cy="240" r="5" fill="var(--primary)" opacity="0.6"></circle>
+      </svg>
+    </div>
+  </div>
+  
+  <!-- Bottom diagonal divider transitioning to dark section -->
+  <div class="contact-service-area-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewbox="0 0 1200 80" preserveaspectratio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,0 L1200,80 Z" fill="#1F2933"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="contact-trust-section" data-layout-spec="צור קשר-trust">
+  <div class="contact-trust-container">
+    <div class="contact-trust-content">
+      <h2 class="contact-trust-title">מה שאפשר לצפות</h2>
+      <p class="contact-trust-intro">גישה מדודה ששומרת על אתר מסודר ותוצאה עמידה לאורך זמן.</p>
+      
+      <div class="contact-trust-grid">
+        <article class="contact-trust-note">
+          <h3 class="contact-trust-note-title">אזור עבודה נקי</h3>
+          <p class="contact-trust-note-text">כל יום מסתיים בסידור וניקיון יסודי. לא משאירים פסולת או כלים מפוזרים — האתר נשאר בטוח ונגיש.</p>
+        </article>
+        
+        <article class="contact-trust-note">
+          <h3 class="contact-trust-note-title">היקף ברור</h3>
+          <p class="contact-trust-note-text">מה שמוסכם בתחילה זה מה שמתבצע. אין הפתעות באמצע הדרך, ואם משהו משתנה — מדברים קודם.</p>
+        </article>
+        
+        <article class="contact-trust-note">
+          <h3 class="contact-trust-note-title">גימור קפדני</h3>
+          <p class="contact-trust-note-text">תשומת לב לפרטים הקטנים — קצוות חלקים, מפלסים מדויקים, ומשטחים שנגמרים כמו שצריך.</p>
+        </article>
+        
+        <article class="contact-trust-note">
+          <h3 class="contact-trust-note-title">תקשורת ישירה</h3>
+          <p class="contact-trust-note-text">מעדכנים אתכם לאורך הדרך. שאלות מקבלות תשובות, והתקדמות מדווחת באופן שוטף.</p>
+        </article>
+      </div>
+      
+      <div class="contact-trust-cta-wrapper">
+        <a href="/projects" class="contact-trust-cta">צפייה בפרויקטים</a>
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-column footer-about">
+        <img src="/assets/business-logo.webp" alt="עבודות בטון ועוד" class="logo">
+        <p class="footer-description">מומחים בעבודות בטון, שיפוצים ובנייה. איכות ומקצועיות ללא פשרות.</p>
+      </div>
+      
+      <div class="footer-column footer-links">
+        <h3 class="footer-title">קישורים מהירים</h3>
+        <ul class="footer-nav">
+          <li><a href="/services">שירותים</a></li>
+          <li><a href="/projects">פרויקטים</a></li>
+          <li><a href="/contact">צור קשר</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column footer-contact">
+        <h3 class="footer-title">יצירת קשר</h3>
+        <ul class="contact-list">
+          <li>
+            <i class="fas fa-envelope"></i>
+            <a href="mailto:[business_email]">[business_email]</a>
+          </li>
+          <li>
+            <i class="fas fa-phone"></i>
+            <a href="tel:[business_phone]">[business_phone]</a>
+          </li>
+          <li><a href="/"><i class="fas fa-map-marker-alt"></i>
+            <span>[business_address]</span></a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-column footer-social">
+        <h3 class="footer-title">עקבו אחרינו</h3>
+        <div class="social-links">
+          <a href="[facebook_handle]" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="[instagram_handle]" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="[whatsapp_handle]" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <p class="copyright">© 2026 עבודות בטון ועוד. כל הזכויות שמורות.</p>
+        <div class="footer-bottom-links">
+          <a href="/privacy">מדיניות פרטיות</a>
+          <span class="separator">|</span>
+          <a href="/terms">תנאי שימוש</a>
+          <span class="separator">|</span>
+          <a href="/accessibility">נגישות</a>
+          <span class="separator">|</span>
+          <a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+
+    <script id="zappy-navbar-scroll-effect">
+    (function(){var nb=document.querySelector('nav.navbar,.navbar:not(.zappy-catalog-menu)');var cm=document.querySelector('.zappy-catalog-menu');if(!nb)return;var fb='rgba(31,41,51,0.85)';var th=60;nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';function onS(){var y=window.scrollY||window.pageYOffset;if(y>th){nb.style.background=fb;nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';if(cm){cm.style.background=fb;cm.style.backdropFilter='blur(12px)';cm.style.webkitBackdropFilter='blur(12px)';}}else{nb.style.background='transparent';nb.style.backdropFilter='none';nb.style.webkitBackdropFilter='none';nb.style.boxShadow='none';if(cm){cm.style.background='transparent';cm.style.backdropFilter='none';cm.style.webkitBackdropFilter='none';}}}window.addEventListener('scroll',onS,{passive:true});onS();})();
+    </script>
+</body>
+</html>
